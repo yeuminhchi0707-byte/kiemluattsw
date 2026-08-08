@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KIEMLUA - TAITUSUNWIN | Hệ Thống Analytics VIP</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-main: #090d16;
+            --bg-card: #121827;
+            --bg-card-hover: #1a2235;
+            --primary: #00f2fe;
+            --secondary: #4facfe;
+            --accent: #ff007f;
+            --gold: #ffb703;
+            --green: #10b981;
+            --telegram-blue: #0088cc;
+            --text-main: #f3f4f6;
+            --text-sub: #9ca3af;
+            --border-glow: rgba(0, 242, 254, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            background-color: var(--bg-main);
+            position: relative;
+            padding-bottom: 90px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: rgba(18, 24, 39, 0.8);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            font-weight: 800;
+            font-size: 1.05rem;
+            background: linear-gradient(45deg, var(--gold), #ff5500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-pro {
+            background: linear-gradient(90deg, #ff9900, #ff5500);
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .btn-menu, .btn-header-account {
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-menu {
+            background: transparent;
+            color: var(--text-main);
+            font-size: 1.2rem;
+            padding: 5px;
+        }
+
+        .btn-header-account {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #000;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 8px 16px;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        /* LIVE TICKER */
+        .ticker-bar {
+            background: rgba(0, 242, 254, 0.05);
+            border-bottom: 1px solid var(--border-glow);
+            padding: 8px 15px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-sub);
+            min-height: 35px;
+        }
+
+        .ticker-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--green);
+            animation: pulse 1.5s infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+
+        .ticker-text {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .ticker-text.fade-out {
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+
+        .ticker-text span {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        /* MAIN CONTENT SECTION */
+        .content {
+            padding: 16px;
+        }
+
+        /* TAB VIEWS */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* HERO CARD */
+        .hero-card {
+            background: linear-gradient(145deg, #161e31, #0f1523);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .system-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 183, 3, 0.1);
+            color: var(--gold);
+            border: 1px solid rgba(255, 183, 3, 0.3);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .hero-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 10px;
+        }
+
+        .hero-title span {
+            color: var(--gold);
+        }
+
+        .hero-desc {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .tags-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag-item {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--primary);
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+        }
+
+        /* GAME GRID */
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .game-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 14px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .game-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .game-badge {
+            width: 44px;
+            height: 44px;
+            margin: 0 auto 8px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .game-name {
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .game-status {
+            font-size: 0.62rem;
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        /* PRICING CARDS */
+        .price-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .price-card.featured {
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(255, 183, 3, 0.15);
+        }
+
+        .hot-badge {
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            background: linear-gradient(90deg, #ff9900, #ff5500);
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .price-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .plan-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .plan-price {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 14px;
+        }
+
+        .features-list li {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .features-list li i.fa-check { color: var(--green); }
+
+        .btn-buy {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .price-card.featured .btn-buy {
+            background: linear-gradient(135deg, var(--gold), #ff5500);
+            color: #000;
+        }
+
+        /* AUTH FORMS */
+        .auth-container {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 10px;
+        }
+
+        .auth-tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-sub);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .auth-tab-btn.active {
+            background: rgba(255, 183, 3, 0.15);
+            color: var(--gold);
+            border: 1px solid rgba(255, 183, 3, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--gold);
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--gold), #ff5500);
+            color: #000;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        /* MODALS */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .payment-card {
+            background: var(--bg-card);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 30px rgba(255, 183, 3, 0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: var(--text-sub);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .qr-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 12px;
+            border: 2px solid #fff;
+            margin: 12px auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        .info-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 12px;
+            text-align: left;
+            font-size: 0.8rem;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            color: var(--text-sub);
+        }
+
+        .info-value {
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-copy {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--gold);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+
+        .btn-confirm-payment {
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--green), #059669);
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-telegram-open {
+            width: 100%;
+            padding: 12px;
+            margin-top: 12px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #0088cc, #005580);
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        /* BOTTOM NAVBAR */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: rgba(18, 24, 39, 0.95);
+            backdrop-filter: blur(15px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 65px;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 25%;
+        }
+
+        .nav-item i { font-size: 1.2rem; }
+        .nav-item.active { color: var(--gold); }
+
+        .nav-item-key {
+            position: relative;
+            top: -12px;
+        }
+
+        .key-btn-inner {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), #ff5500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(255, 183, 3, 0.4);
+            border: 3px solid var(--bg-main);
+            color: #000;
+            font-size: 1.2rem;
+        }
+
+        /* SIDEBAR DRAWER */
+        .drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: var(--bg-card);
+            z-index: 2001;
+            transition: left 0.3s ease;
+            padding: 20px;
+            box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+        }
+
+        .drawer.open { left: 0; }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--gold);
+        }
+
+        .menu-list { list-style: none; }
+
+        .menu-item {
+            padding: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .menu-item i {
+            width: 20px;
+            color: var(--gold);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="brand">
+                <button class="btn-menu" id="openDrawer"><i class="fa-solid fa-bars-staggered"></i></button>
+                <div class="brand-logo"><i class="fa-solid fa-fire"></i> KIEMLUA (TAITUSUNWIN)</div>
+                <span class="badge-pro">PRO</span>
+            </div>
+            <button class="btn-header-account" id="headerAuthBtn" onclick="switchTab('tab-account')">
+                <i class="fa-solid fa-user-lock"></i> Tài Khoản
+            </button>
+        </header>
+
+        <!-- LIVE TICKER THÔNG BÁO -->
+        <div class="ticker-bar">
+            <div class="ticker-dot"></div>
+            <div class="ticker-text" id="tickerText">
+                [Khách ***882] vừa kích hoạt thành công <span>Gói Vĩnh Viễn 170k</span>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="content">
+
+            <!-- TAB 1: TRANG CHỦ -->
+            <div id="tab-home" class="tab-content active">
+                <div class="hero-card">
+                    <div class="system-tag">
+                        <i class="fa-solid fa-bolt"></i> THUẬT TOÁN VIP 2026
+                    </div>
+                    <h1 class="hero-title">KIEMLUA <span>TAITUSUNWIN</span> PRO</h1>
+                    <p class="hero-desc">
+                        Nền tảng phân tích luồng dữ liệu tự động, hỗ trợ phân tích chuỗi chuẩn xác và chế độ tự động thông minh.
+                    </p>
+                    <div class="tags-group">
+                        <span class="tag-item">#ChốngDelay</span>
+                        <span class="tag-item">#ChuẩnXác94%</span>
+                    </div>
+                </div>
+
+                <div class="section-title">
+                    <i class="fa-solid fa-fire" style="color: var(--accent);"></i> GAME NỔI BẬT
+                </div>
+
+                <div class="game-grid">
+                    <div class="game-card" onclick="useTool('SUNWIN')">
+                        <div class="game-badge" style="background: #e11d48; color:#fff;">SUN</div>
+                        <div class="game-name">SUNWIN</div>
+                        <div class="game-status">• Sẵn Sàng</div>
+                    </div>
+                    <div class="game-card" onclick="useTool('HITCLUB')">
+                        <div class="game-badge" style="background: #2563eb; color:#fff;">HIT</div>
+                        <div class="game-name">HITCLUB</div>
+                        <div class="game-status">• Sẵn Sàng</div>
+                    </div>
+                    <div class="game-card" onclick="useTool('BCR GAME')">
+                        <div class="game-badge" style="background: #d97706; color:#fff;">BCR</div>
+                        <div class="game-name">BCR GAME</div>
+                        <div class="game-status" style="color: var(--gold);">★ VIP Signal</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: DANH SÁCH GAME -->
+            <div id="tab-game" class="tab-content">
+                <div class="section-title">
+                    <i class="fa-solid fa-gamepad" style="color: var(--primary);"></i> DANH SÁCH GAME HỖ TRỢ
+                </div>
+                <div class="game-grid">
+                    <div class="game-card" onclick="useTool('SUNWIN')">
+                        <div class="game-badge" style="background: #e11d48; color:#fff;">SUN</div>
+                        <div class="game-name">SUNWIN</div>
+                        <div class="game-status">• Hoạt động</div>
+                    </div>
+                    <div class="game-card" onclick="useTool('HITCLUB')">
+                        <div class="game-badge" style="background: #2563eb; color:#fff;">HIT</div>
+                        <div class="game-name">HITCLUB</div>
+                        <div class="game-status">• Hoạt động</div>
+                    </div>
+                    <div class="game-card" onclick="useTool('789CLUB')">
+                        <div class="game-badge" style="background: #059669; color:#fff;">789</div>
+                        <div class="game-name">789CLUB</div>
+                        <div class="game-status">• Hoạt động</div>
+                    </div>
+                    <div class="game-card" onclick="useTool('B52 CLUB')">
+                        <div class="game-badge" style="background: #7c3aed; color:#fff;">B52</div>
+                        <div class="game-name">B52 CLUB</div>
+                        <div class="game-status">• Hoạt động</div>
+                    </div>
+                    <div class="game-card" onclick="useTool('68 GAME BÀI')">
+                        <div class="game-badge" style="background: #db2777; color:#fff;">68G</div>
+                        <div class="game-name">68 GAME BÀI</div>
+                        <div class="game-status">• Hoạt động</div>
+                    </div>
+                    <div class="game-card" onclick="useTool('MANCLUB')">
+                        <div class="game-badge" style="background: #ea580c; color:#fff;">MAN</div>
+                        <div class="game-name">MANCLUB</div>
+                        <div class="game-status">• Hoạt động</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: MUA KEY BẢN QUYỀN -->
+            <div id="tab-key" class="tab-content">
+                <div class="section-title">
+                    <i class="fa-solid fa-key" style="color: var(--gold);"></i> BẢNG GIÁ KEY BẢN QUYỀN
+                </div>
+
+                <div class="price-card">
+                    <div class="price-card-header">
+                        <span class="plan-title">Gói Trải Nghiệm 1 Ngày</span>
+                        <span class="plan-price">20.000đ</span>
+                    </div>
+                    <ul class="features-list">
+                        <li><i class="fa-solid fa-check"></i> Tỉ lệ chuẩn xác ~75%</li>
+                        <li><i class="fa-solid fa-check"></i> Phân tích cơ bản</li>
+                    </ul>
+                    <button class="btn-buy" onclick="openPaymentModal(20000, 'Gói 1 Ngày')">MUA GÓI 20K</button>
+                </div>
+
+                <div class="price-card">
+                    <div class="price-card-header">
+                        <span class="plan-title">Gói Tiết Kiệm 4 Ngày</span>
+                        <span class="plan-price">40.000đ</span>
+                    </div>
+                    <ul class="features-list">
+                        <li><i class="fa-solid fa-check"></i> Tỉ lệ chuẩn xác ~82%</li>
+                        <li><i class="fa-solid fa-check"></i> Luồng dữ liệu ổn định 24/7</li>
+                    </ul>
+                    <button class="btn-buy" onclick="openPaymentModal(40000, 'Gói 4 Ngày')">MUA GÓI 40K</button>
+                </div>
+
+                <div class="price-card featured">
+                    <div class="hot-badge">Phổ biến</div>
+                    <div class="price-card-header">
+                        <span class="plan-title" style="color: var(--gold);">Gói VIP 1 Tuần</span>
+                        <span class="plan-price">60.000đ</span>
+                    </div>
+                    <ul class="features-list">
+                        <li><i class="fa-solid fa-check"></i> Tỉ lệ chuẩn xác ~90%</li>
+                        <li><i class="fa-solid fa-check"></i> Tốc độ cao (Chống Delay)</li>
+                        <li><i class="fa-solid fa-check"></i> Hỗ trợ kỹ thuật 1-1</li>
+                    </ul>
+                    <button class="btn-buy" onclick="openPaymentModal(60000, 'Gói 1 Tuần')">MUA GÓI 60K</button>
+                </div>
+
+                <div class="price-card">
+                    <div class="price-card-header">
+                        <span class="plan-title">Gói Nâng Cao 1 Tháng</span>
+                        <span class="plan-price">80.000đ</span>
+                    </div>
+                    <ul class="features-list">
+                        <li><i class="fa-solid fa-check"></i> Full tính năng VIP</li>
+                        <li><i class="fa-solid fa-check"></i> Cập nhật thuật toán liên tục</li>
+                    </ul>
+                    <button class="btn-buy" onclick="openPaymentModal(80000, 'Gói 1 Tháng')">MUA GÓI 80K</button>
+                </div>
+
+                <div class="price-card" style="border-color: var(--accent);">
+                    <div class="price-card-header">
+                        <span class="plan-title" style="color: var(--accent);">Gói Vĩnh Viễn (VIP Pro)</span>
+                        <span class="plan-price" style="color: var(--accent);">170.000đ</span>
+                    </div>
+                    <ul class="features-list">
+                        <li><i class="fa-solid fa-check"></i> Sử dụng trọn đời không giới hạn</li>
+                        <li><i class="fa-solid fa-check"></i> Độc quyền Auto Cược/Treo Máy</li>
+                        <li><i class="fa-solid fa-check"></i> Ưu tiên CSKH VIP riêng</li>
+                    </ul>
+                    <button class="btn-buy" style="background: var(--accent); color: #fff;" onclick="openPaymentModal(170000, 'Gói Vĩnh Viễn')">MUA GÓI 170K</button>
+                </div>
+            </div>
+
+            <!-- TAB 4: TÀI KHOẢN -->
+            <div id="tab-account" class="tab-content">
+                <div id="accountGuestView">
+                    <div class="auth-container">
+                        <div class="auth-tabs">
+                            <button class="auth-tab-btn active" id="tabRegisterBtn" onclick="toggleAuthMode('register')">ĐĂNG KÝ</button>
+                            <button class="auth-tab-btn" id="tabLoginBtn" onclick="toggleAuthMode('login')">ĐĂNG NHẬP</button>
+                        </div>
+
+                        <!-- Form Đăng Ký -->
+                        <form id="registerForm" onsubmit="handleRegister(event)">
+                            <div class="form-group">
+                                <label>Tên đăng nhập / SĐT</label>
+                                <input type="text" id="regUser" class="form-input" placeholder="Tạo tên tài khoản..." required>
+                            </div>
+                            <div class="form-group">
+                                <label>Mật khẩu</label>
+                                <input type="password" id="regPass" class="form-input" placeholder="Tạo mật khẩu..." required>
+                            </div>
+                            <div class="form-group">
+                                <label>Xác nhận mật khẩu</label>
+                                <input type="password" id="regPassConfirm" class="form-input" placeholder="Nhập lại mật khẩu..." required>
+                            </div>
+                            <button type="submit" class="btn-auth">TẠO TÀI KHOẢN NGAY</button>
+                        </form>
+
+                        <!-- Form Đăng Nhập -->
+                        <form id="loginForm" style="display: none;" onsubmit="handleLogin(event)">
+                            <div class="form-group">
+                                <label>Tên đăng nhập / SĐT</label>
+                                <input type="text" id="loginUser" class="form-input" placeholder="Tên tài khoản..." required>
+                            </div>
+                            <div class="form-group">
+                                <label>Mật khẩu</label>
+                                <input type="password" id="loginPass" class="form-input" placeholder="Mật khẩu..." required>
+                            </div>
+                            <button type="submit" class="btn-auth">ĐĂNG NHẬP</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Màn hình ĐÃ ĐĂNG NHẬP -->
+                <div id="accountUserView" style="display: none;">
+                    <div class="hero-card" style="text-align: center; padding: 30px 20px;">
+                        <div class="avatar" style="width: 70px; height: 70px; margin: 0 auto 15px; font-size: 2rem;">
+                            <i class="fa-solid fa-user-check"></i>
+                        </div>
+                        <h3 id="displayUsername" style="color: var(--gold);">Tên Tài Khoản</h3>
+                        <p style="font-size:0.85rem; color:var(--text-sub); margin-top:8px;" id="displayTime">
+                            Thời gian sử dụng: <b style="color:#ef4444;">Bạn đã hết thời gian sử dụng</b>
+                        </p>
+                        <button class="btn-buy" style="margin-top:20px; background: rgba(239, 68, 68, 0.2); color:#ef4444;" onclick="handleLogout()">ĐĂNG XUẤT</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- MODAL THANH TOÁN VIETQR -->
+        <div class="modal-overlay" id="paymentModal">
+            <div class="payment-card">
+                <button class="close-modal" onclick="closePaymentModal()"><i class="fa-solid fa-xmark"></i></button>
+                <h3 style="font-size: 1.1rem; color: var(--gold);">CỔNG THANH TOÁN VIETQR</h3>
+                <p style="font-size: 0.75rem; color: var(--text-sub);" id="selectedPackageName">Gói Key Bản Quyền</p>
+
+                <img id="qrImageCode" src="" alt="Mã QR Thanh Toán" class="qr-image">
+
+                <div class="info-box">
+                    <div class="info-row">
+                        <span class="info-label">Ngân hàng:</span>
+                        <span class="info-value">MBBank</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Chủ tài khoản:</span>
+                        <span class="info-value" style="color: var(--gold);">HOANG DINH TUNG</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Số tài khoản:</span>
+                        <span class="info-value">
+                            <span>0793270018</span>
+                            <button class="btn-copy" onclick="copyText('0793270018')"><i class="fa-regular fa-copy"></i> Copy</button>
+                        </span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Nội dung CK:</span>
+                        <span class="info-value">
+                            <span id="ndValue" style="color: var(--green);">NAP ...</span>
+                            <button class="btn-copy" onclick="copyText(document.getElementById('ndValue').innerText)"><i class="fa-regular fa-copy"></i> Copy</button>
+                        </span>
+                    </div>
+                </div>
+
+                <button class="btn-confirm-payment" onclick="confirmPayment()">
+                    <i class="fa-solid fa-circle-check"></i> TÔI ĐÃ CHUYỂN TIỀN
+                </button>
+            </div>
+        </div>
+
+        <!-- MODAL CSKH TELEGRAM QR -->
+        <div class="modal-overlay" id="cskhModal">
+            <div class="payment-card" style="border-color: var(--telegram-blue); box-shadow: 0 0 30px rgba(0, 136, 204, 0.3);">
+                <button class="close-modal" onclick="closeCskhModal()"><i class="fa-solid fa-xmark"></i></button>
+                <h3 style="font-size: 1.1rem; color: #38bdf8;"><i class="fa-brands fa-telegram"></i> HỖ TRỢ CSKH 24/7</h3>
+                <p style="font-size: 0.75rem; color: var(--text-sub); margin-top: 4px;">Quét mã QR hoặc nhắn qua Telegram để hỗ trợ nhanh nhất</p>
+
+                <img src="cskh-qr.png" alt="CSKH Telegram QR" class="qr-image" style="width: 220px; height: auto; border: none; border-radius: 16px;">
+
+                <div class="info-box" style="text-align: center;">
+                    <span style="font-size: 0.9rem; font-weight: 800; color: #38bdf8;">@TAITUSUNWIN1</span>
+                </div>
+
+                <a href="https://t.me/TAITUSUNWIN1" target="_blank" class="btn-telegram-open">
+                    <i class="fa-paper-plane fa-solid"></i> MỞ TELEGRAM NGAY
+                </a>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAVIGATION -->
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('tab-home', this)">
+                <i class="fa-solid fa-house"></i>
+                <span>Trang Chủ</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('tab-game', this)">
+                <i class="fa-solid fa-gamepad"></i>
+                <span>Game</span>
+            </div>
+            <div class="nav-item nav-item-key" onclick="switchTab('tab-key', this)">
+                <div class="key-btn-inner">
+                    <i class="fa-solid fa-key"></i>
+                </div>
+                <span style="margin-top: 14px; font-weight:700; color:var(--gold);">Mua Key</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('tab-account', this)">
+                <i class="fa-solid fa-user"></i>
+                <span>Tài Khoản</span>
+            </div>
+        </nav>
+
+        <!-- SIDEBAR DRAWER -->
+        <div class="drawer-overlay" id="drawerOverlay"></div>
+        <div class="drawer" id="drawer">
+            <div class="user-profile">
+                <div class="avatar"><i class="fa-solid fa-user"></i></div>
+                <div>
+                    <div style="font-weight:700; font-size:0.9rem;" id="drawerUserName">Khách Bảng</div>
+                    <div style="font-size:0.7rem; color: var(--text-sub);" id="drawerUserStatus">Chưa đăng nhập</div>
+                </div>
+            </div>
+            <ul class="menu-list">
+                <li class="menu-item" onclick="switchTab('tab-home'); closeDrawer();"><i class="fa-solid fa-house"></i> Trang Chủ</li>
+                <li class="menu-item" onclick="switchTab('tab-key'); closeDrawer();"><i class="fa-solid fa-wallet"></i> Nạp Tiền & Mua Key</li>
+                <li class="menu-item" onclick="switchTab('tab-game'); closeDrawer();"><i class="fa-solid fa-gamepad"></i> Danh Sách Game</li>
+                <li class="menu-item" onclick="openCskhModal(); closeDrawer();"><i class="fa-solid fa-headset" style="color: #38bdf8;"></i> Hỗ Trợ CSKH 24/7</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC FULL -->
+    <script>
+        // LOGIC CHẠY THÔNG BÁO RUNNING TICKER
+        const mockCustomers = ["Khách ***882", "Khách ***319", "Khách ***905", "Khách ***114", "Khách ***672", "Khách ***481", "Khách ***203", "Khách ***759", "Khách ***524", "Khách ***966"];
+        const mockPackages = ["Gói 1 Ngày 20k", "Gói 4 Ngày 40k", "Gói VIP 1 Tuần 60k", "Gói 1 Tháng 80k", "Gói Vĩnh Viễn 170k"];
+        let lastCustIdx = -1, lastPkgIdx = -1;
+
+        function runLiveTicker() {
+            const tickerText = document.getElementById('tickerText');
+            if (!tickerText) return;
+
+            tickerText.classList.add('fade-out');
+            setTimeout(() => {
+                let custIdx, pkgIdx;
+                do { custIdx = Math.floor(Math.random() * mockCustomers.length); } while (custIdx === lastCustIdx);
+                do { pkgIdx = Math.floor(Math.random() * mockPackages.length); } while (pkgIdx === lastPkgIdx);
+                lastCustIdx = custIdx; lastPkgIdx = pkgIdx;
+
+                tickerText.innerHTML = `[${mockCustomers[custIdx]}] vừa kích hoạt thành công <span>${mockPackages[pkgIdx]}</span>`;
+                tickerText.classList.remove('fade-out');
+            }, 300);
+        }
+        setInterval(runLiveTicker, 3500);
+
+        // SYSTEM STATE & LOCALSTORAGE HELPERS
+        let currentUser = localStorage.getItem('kiemlua_session') || null;
+        let currentSelectedAmount = 0;
+        let currentSelectedPkgName = "";
+
+        function getUsers() { return JSON.parse(localStorage.getItem('kiemlua_users')) || {}; }
+        function saveUsers(users) { localStorage.setItem('kiemlua_users', JSON.stringify(users)); }
+
+        window.onload = function() {
+            if (currentUser) {
+                updateUILoggedIn(currentUser);
+            }
+        };
+
+        // DRAWER CONTROLS
+        const drawer = document.getElementById('drawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+        document.getElementById('openDrawer').addEventListener('click', () => {
+            drawer.classList.add('open');
+            drawerOverlay.style.display = 'block';
+        });
+        function closeDrawer() {
+            drawer.classList.remove('open');
+            drawerOverlay.style.display = 'none';
+        }
+        drawerOverlay.addEventListener('click', closeDrawer);
+
+        // CSKH MODAL CONTROLS
+        const cskhModal = document.getElementById('cskhModal');
+        function openCskhModal() { cskhModal.classList.add('active'); }
+        function closeCskhModal() { cskhModal.classList.remove('active'); }
+
+        // TAB NAVIGATION
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            const target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
+
+            if (element) {
+                document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+                if (!element.classList.contains('nav-item-key')) element.classList.add('active');
+            }
+
+            if (tabId === 'tab-account' && currentUser) {
+                updateUILoggedIn(currentUser);
+            }
+        }
+
+        // AUTHENTICATION LOGIC
+        function toggleAuthMode(mode) {
+            const regBtn = document.getElementById('tabRegisterBtn');
+            const loginBtn = document.getElementById('tabLoginBtn');
+            const regForm = document.getElementById('registerForm');
+            const loginForm = document.getElementById('loginForm');
+
+            if (mode === 'register') {
+                regBtn.classList.add('active'); loginBtn.classList.remove('active');
+                regForm.style.display = 'block'; loginForm.style.display = 'none';
+            } else {
+                loginBtn.classList.add('active'); regBtn.classList.remove('active');
+                loginForm.style.display = 'block'; regForm.style.display = 'none';
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('regUser').value.trim();
+            const pass = document.getElementById('regPass').value;
+            const passConfirm = document.getElementById('regPassConfirm').value;
+
+            if (pass !== passConfirm) {
+                alert("Mật khẩu xác nhận không khớp!");
+                return;
+            }
+
+            let users = getUsers();
+            if (users[username]) {
+                alert("Tài khoản này đã tồn tại! Vui lòng Đăng Nhập.");
+                return;
+            }
+
+            users[username] = { password: pass, hasKey: false };
+            saveUsers(users);
+
+            currentUser = username;
+            localStorage.setItem('kiemlua_session', username);
+            updateUILoggedIn(username);
+            alert("Đăng ký tài khoản thành công!");
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value;
+
+            let users = getUsers();
+            if (!users[username] || users[username].password !== pass) {
+                alert("Tên đăng nhập hoặc mật khẩu không chính xác!");
+                return;
+            }
+
+            currentUser = username;
+            localStorage.setItem('kiemlua_session', username);
+            updateUILoggedIn(username);
+            alert("Đăng nhập thành công!");
+        }
+
+        function updateUILoggedIn(username) {
+            let users = getUsers();
+            let user = users[username];
+            let isKeyActive = user && user.hasKey;
+
+            document.getElementById('accountGuestView').style.display = 'none';
+            document.getElementById('accountUserView').style.display = 'block';
+            document.getElementById('displayUsername').innerText = username;
+            document.getElementById('drawerUserName').innerText = username;
+            document.getElementById('drawerUserStatus').innerText = isKeyActive ? "Tài khoản VIP" : "Chưa kích hoạt Key";
+            document.getElementById('headerAuthBtn').innerHTML = `<i class="fa-solid fa-user"></i> ${username}`;
+
+            const displayTime = document.getElementById('displayTime');
+            if (displayTime) {
+                if (isKeyActive) {
+                    displayTime.innerHTML = `Thời gian sử dụng: <b style="color: var(--green);">Đang hoạt động (Đã kích hoạt Key)</b>`;
+                } else {
+                    displayTime.innerHTML = `Thời gian sử dụng: <b style="color: #ef4444;">Bạn đã hết thời gian sử dụng</b>`;
+                }
+            }
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('kiemlua_session');
+
+            document.getElementById('accountGuestView').style.display = 'block';
+            document.getElementById('accountUserView').style.display = 'none';
+            document.getElementById('drawerUserName').innerText = "Khách Bảng";
+            document.getElementById('drawerUserStatus').innerText = "Chưa đăng nhập";
+            document.getElementById('headerAuthBtn').innerHTML = `<i class="fa-solid fa-user-lock"></i> Tài Khoản`;
+            
+            document.getElementById('regUser').value = '';
+            document.getElementById('regPass').value = '';
+            document.getElementById('regPassConfirm').value = '';
+            document.getElementById('loginUser').value = '';
+            document.getElementById('loginPass').value = '';
+
+            alert("Đã đăng xuất thành công!");
+        }
+
+        // TOOL USE & KEY CHECK LOGIC
+        function useTool(gameName) {
+            if (!currentUser) {
+                alert("Bạn phải tạo hoặc đăng nhập tài khoản trước mới có thể mở Tool!");
+                switchTab('tab-account');
+                return;
+            }
+
+            let users = getUsers();
+            let user = users[currentUser];
+
+            if (!user || !user.hasKey) {
+                alert("Bạn đã hết thời gian sử dụng!");
+                switchTab('tab-key');
+                return;
+            }
+
+            alert(`Hệ thống đang khởi tạo luồng dữ liệu Analytics cho game ${gameName}...`);
+        }
+
+        // PAYMENT MODAL & ORDER LOGIC
+        const paymentModal = document.getElementById('paymentModal');
+        
+        function openPaymentModal(amount, pkgName) {
+            if (!currentUser) {
+                alert("Bạn phải tạo hoặc đăng nhập tài khoản trước khi nạp tiền!");
+                switchTab('tab-account');
+                return;
+            }
+
+            currentSelectedAmount = amount;
+            currentSelectedPkgName = pkgName;
+
+            const bankId = "MB";
+            const accountNo = "0793270018";
+            const accountName = "HOANG DINH TUNG";
+            const memo = "NAP " + currentUser.toUpperCase();
+
+            document.getElementById('ndValue').innerText = memo;
+
+            const qrUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-compact2.png?amount=${amount}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(accountName)}`;
+            
+            document.getElementById('qrImageCode').src = qrUrl;
+            document.getElementById('selectedPackageName').innerText = pkgName + " - Giá: " + amount.toLocaleString('vi-VN') + "đ";
+            paymentModal.classList.add('active');
+        }
+
+        function closePaymentModal() {
+            paymentModal.classList.remove('active');
+        }
+
+        function confirmPayment() {
+            if (!currentUser) return;
+
+            let orders = JSON.parse(localStorage.getItem('kiemlua_orders')) || [];
+
+            const newOrder = {
+                id: 'GD' + Math.floor(100000 + Math.random() * 900000),
+                username: currentUser,
+                pkgName: currentSelectedPkgName,
+                amount: currentSelectedAmount,
+                memo: "NAP " + currentUser.toUpperCase(),
+                time: new Date().toLocaleString('vi-VN'),
+                status: 'pending'
+            };
+
+            orders.push(newOrder);
+            localStorage.setItem('kiemlua_orders', JSON.stringify(orders));
+
+            alert("Hệ thống đã nhận được yêu cầu nạp tiền!\nVui lòng chờ Admin kiểm tra và duyệt cấp Key.");
+            closePaymentModal();
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text);
+            alert("Đã sao chép: " + text);
+        }
+    </script>
+</body>
+</html>
